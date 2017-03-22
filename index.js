@@ -22,7 +22,7 @@ Fs.readdirSync(Path.join(__dirname, 'helpers')).forEach(function (file) {
 * @param {Object} themeSettings
 * @param {Object} assembler
 */
-function Paper(settings, themeSettings, assembler) {
+function Paper(settings, themeSettings, assembler, context) {
     var self = this;
 
     self.handlebars = Handlebars.create();
@@ -31,6 +31,7 @@ function Paper(settings, themeSettings, assembler) {
     self.translate = null;
     self.inject = {};
     self.decorators = [];
+    self.context = context || {};
 
     self.settings = settings || {};
     self.themeSettings = themeSettings || {};
@@ -47,7 +48,13 @@ function Paper(settings, themeSettings, assembler) {
  * @param  {Object} context
  */
 Paper.prototype.renderString = function (string, context) {
-    return this.handlebars.compile(string)(context);
+    var self = this;
+    if (this.translator) {
+        return this.handlebars.compile(string)(context);
+    }
+    this.loadTranslations(this.context.acceptLanguage, () => {
+        return this.handlebars.compile(string, context);
+    });
 };
 
 Paper.prototype.loadTheme = function (paths, acceptLanguage, done) {
@@ -133,6 +140,10 @@ Paper.prototype.loadTemplatesSync = function (templates) {
  */
 Paper.prototype.loadTranslations = function (acceptLanguage, callback) {
     var self = this;
+    // may have been invoked earlier.
+    if (self.translator) {
+        return;
+    }
 
     self.assembler.getTranslations((error, translations) => {
         if (error) {
