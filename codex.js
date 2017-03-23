@@ -1,7 +1,7 @@
 'use strict';
 
 var Paper = require('./paper');
-var Translator = require('./translator');
+var Translator = require('./lib/translator');
 
 class Codex {}
 
