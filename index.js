@@ -1,7 +1,7 @@
 'use strict';
 
-var Paper = require('./lib/paper');
-var Codex = require('./lib/codex');
+var Paper = require('./paper');
+var Codex = require('./codex');
 
 module.exports = {
     "Paper": Paper,
