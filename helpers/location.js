@@ -7,7 +7,7 @@ function helper(paper) {
         if ((!paper.context) || (!paper.context.locations)) {
             return '';
         }
-
+        
         return new paper.handlebars.SafeString(paper.context.locations[locationId]) || '';
     });
 }
