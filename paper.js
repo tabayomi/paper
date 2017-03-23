@@ -50,12 +50,7 @@ function Paper(settings, themeSettings, assembler, context, translator) {
  */
 Paper.prototype.renderString = function (string, context) {
     var self = this;
-    if (this.translator) {
-        return this.handlebars.compile(string)(context);
-    }
-    this.loadTranslations(this.context.acceptLanguage, () => {
-        return this.handlebars.compile(string, context);
-    });
+    return this.handlebars.compile(string)(context);
 };
 
 Paper.prototype.loadTheme = function (paths, acceptLanguage, done) {
@@ -67,6 +62,9 @@ Paper.prototype.loadTheme = function (paths, acceptLanguage, done) {
 
     Async.parallel([
         function (next) {
+            if (self.translator) {
+                next();
+            }
             self.loadTranslations(acceptLanguage, next);
         },
         function (next) {
