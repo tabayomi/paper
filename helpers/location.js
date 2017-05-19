@@ -1,14 +1,15 @@
 'use strict';
 
 function helper(paper) {
-    paper.handlebars.registerHelper('location', function (locationId) {
-        const options = arguments[arguments.length - 1];
+    paper.handlebars.registerHelper('location', function (params) {
+        let locationId = params.hash.name;
         
         if ((!paper.context) || (!paper.context.locations)) {
             return '';
         }
         
-        return new paper.handlebars.SafeString(paper.context.locations[locationId]) || '';
+        let content = paper.context.locations[locationId] ? paper.content.locations[locationId] : '';
+        return new paper.handlebars.SafeString(content);
     });
 }
 
